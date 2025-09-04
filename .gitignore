@@ -4,6 +4,9 @@ node_modules/
 # ENVV
 .env
 
+# MAC
+.DS_Store
+
 .idea
 
 dist
