@@ -1,7 +1,5 @@
-import { getDb } from "../../db/mongo.js";
+import {UserModel} from "../entities/user.model.js";
 
 export async function deleteAllUsersService() {
-	const db = await getDb();
-	const res = await db.collection("users").deleteMany({});
-	return res.deletedCount ?? 0;
+    return UserModel.deleteMany()
 }

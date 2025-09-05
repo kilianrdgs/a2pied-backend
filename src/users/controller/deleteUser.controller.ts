@@ -1,5 +1,6 @@
-import type { Request, Response } from "express";
-import { deleteUserService } from "../service/deleteUser.service.js";
+import type {Request, Response} from "express";
+import {deleteUserService} from "../service/deleteUser.service.js";
+import {logError} from "../../utils/logError.js";
 
 /**
  * @openapi
@@ -24,11 +25,12 @@ import { deleteUserService } from "../service/deleteUser.service.js";
  *         description: Utilisateur introuvable
  */
 export async function deleteUserController(req: Request, res: Response) {
-	try {
-		const result = await deleteUserService(req.params.objectId);
+    try {
+        const result = await deleteUserService(req.params.objectId);
+        res.status(200).json(result);
 
-		res.json(result === 1 ? res.sendStatus(204) : res.sendStatus(404));
-	} catch (error) {
-		return res.status(500).json({ message: "Internal server error", error });
-	}
+    } catch (error) {
+        logError(error);
+        return res.status(500).json({message: "Internal server error", error});
+    }
 }

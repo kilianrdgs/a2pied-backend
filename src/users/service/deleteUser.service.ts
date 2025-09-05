@@ -1,12 +1,5 @@
-import { getDb } from "../../db/mongo.js";
-import { toObjectId } from "../../db/objectId.js";
+import {UserModel} from "../entities/user.model.js";
 
 export async function deleteUserService(objectId: string) {
-	const _id = toObjectId(objectId);
-
-	const db = await getDb();
-	const res = await db.collection("users").deleteOne({
-		_id,
-	});
-	return res.deletedCount ?? 0;
+    return UserModel.deleteOne({_id: objectId})
 }

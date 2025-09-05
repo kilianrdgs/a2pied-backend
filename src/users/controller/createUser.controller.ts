@@ -1,5 +1,6 @@
-import type { Request, Response } from "express";
-import { createUserService } from "../service/createUser.service.js";
+import type {Request, Response} from "express";
+import {createUserService} from "../service/createUser.service.js";
+import {logError} from "../../utils/logError.js";
 
 /**
  * @openapi
@@ -40,17 +41,11 @@ import { createUserService } from "../service/createUser.service.js";
  */
 
 export async function createUserController(req: Request, res: Response) {
-	try {
-		const result = await createUserService(req.body);
-
-		if (result instanceof Error) {
-			if (result.message === "Email or pseudo already used") {
-				return res.status(409).json({ message: result.message });
-			}
-			return res.status(400).json({ message: result.message });
-		}
-		return res.status(201).json(result);
-	} catch (error) {
-		return res.status(500).json({ message: "Internal server error", error });
-	}
+    try {
+        const result = await createUserService(req.body);
+        return res.status(201).json(result);
+    } catch (error: unknown) {
+        logError(error);
+        return res.status(500).json({message: "Internal server error", error});
+    }
 }
