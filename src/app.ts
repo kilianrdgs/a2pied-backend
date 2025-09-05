@@ -4,7 +4,7 @@ import swaggerUi from "swagger-ui-express";
 
 import "dotenv/config";
 import cors from "cors";
-import {connectMongo} from "./db/mongo.js";
+import {connectMongoose} from "./db/mongo.js";
 import swaggerOptions from "./docs/swagger.js";
 import globalRouter from "./router.js";
 
@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
 app.use("/doc", swaggerUi.serve, swaggerUi.setup(specs));
 app.use("/api", globalRouter);
 
-connectMongo()
+connectMongoose()
     .then(() => {
         app.listen(PORT, () => {
             console.log(`🚀 API running at http://localhost:${PORT}`);
