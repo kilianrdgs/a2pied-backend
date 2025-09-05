@@ -3,6 +3,7 @@ import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 
 import "dotenv/config";
+import cors from "cors";
 import { connectMongo } from "./db/mongo.js";
 import swaggerOptions from "./docs/swagger.js";
 import globalRouter from "./router.js";
@@ -13,6 +14,15 @@ const PORT = process.env.PORT;
 const specs = swaggerJsdoc(swaggerOptions);
 
 app.use(express.json());
+
+app.use(
+	cors({
+		origin: ["*"],
+		methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+		allowedHeaders: ["Content-Type", "Authorization"],
+	}),
+);
+
 app.use("/doc", swaggerUi.serve, swaggerUi.setup(specs));
 app.use("/api", globalRouter);
 

@@ -1,7 +1,5 @@
 import type { Options } from "swagger-jsdoc";
 
-const PORT = process.env.PORT || 3000;
-
 const swaggerOptions: Options = {
 	definition: {
 		openapi: "3.0.0",
@@ -10,11 +8,7 @@ const swaggerOptions: Options = {
 			version: "1.0.0",
 			description: "API du jeu a2pied",
 		},
-		servers: [
-			{
-				url: `http://localhost:${PORT}`,
-			},
-		],
+		servers: [{ url: process.env.URL_API }],
 	},
 	apis: ["./src/**/*.ts"],
 };
