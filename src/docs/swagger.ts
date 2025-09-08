@@ -1,6 +1,8 @@
 import type {Options} from "swagger-jsdoc";
 
 const NODE_ENV = process.env.NODE_ENV ?? "dev"
+
+const servers = NODE_ENV === "dev" ? [] : [{url: process.env.URL_API}]
 const swaggerOptions: Options = {
     definition: {
         openapi: "3.0.0",
@@ -9,7 +11,7 @@ const swaggerOptions: Options = {
             version: "1.0.0",
             description: "API du jeu a2pied",
         },
-        servers: NODE_ENV === "dev" ? [] : [{url: process.env.URL_API}],
+        servers
     },
     apis: ["./src/**/*.ts"],
 };
