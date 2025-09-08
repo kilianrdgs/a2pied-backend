@@ -1,6 +1,5 @@
-import { getDb } from "../../db/mongo.js";
+import {UserModel} from "../entities/user.model.js";
 
 export async function getUsersService() {
-	const db = await getDb();
-	return db.collection("users").find({}).toArray();
+    return UserModel.find()
 }

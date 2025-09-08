@@ -1,8 +1,7 @@
-import { getDb } from "../../db/mongo.js";
-import type { User } from "../user.model.js";
+import {UserModel} from "../entities/user.model.js";
+import {CreateUserDto} from "../entities/dto/createUser.dto.js";
 
-export async function createUserService(user: User) {
-	const db = await getDb();
-	const { insertedId } = await db.collection("users").insertOne(user);
-	return { ...user, _id: String(insertedId) };
+export async function createUserService(userData: CreateUserDto) {
+    const user = new UserModel(userData)
+    return user.save()
 }
