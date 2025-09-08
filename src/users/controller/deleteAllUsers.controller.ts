@@ -1,6 +1,6 @@
-import type {Request, Response} from "express";
-import {deleteAllUsersService} from "../service/deleteAllUsers.service.js";
-import {logError} from "../../utils/logError.js";
+import type { Request, Response } from "express";
+import { logError } from "../../utils/logError.js";
+import { deleteAllUsersService } from "../service/deleteAllUsers.service.js";
 
 /**
  * @openapi
@@ -27,11 +27,11 @@ import {logError} from "../../utils/logError.js";
  */
 
 export async function deleteAllUsersController(_req: Request, res: Response) {
-    try {
-        const result = await deleteAllUsersService();
-        res.status(200).json(result);
-    } catch (error) {
-        logError(error);
-        return res.status(500).json({message: "Internal server error", error});
-    }
+	try {
+		const result = await deleteAllUsersService();
+		res.status(200).json(result);
+	} catch (error) {
+		logError(error);
+		return res.status(500).json({ message: "Internal server error", error });
+	}
 }

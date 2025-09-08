@@ -1,4 +1,4 @@
 export interface IUser {
-    mail: string;
-    pseudo: string;
+	mail: string;
+	pseudo: string;
 }

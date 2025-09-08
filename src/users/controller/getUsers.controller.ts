@@ -1,6 +1,6 @@
-import type {Request, Response} from "express";
-import {getUsersService} from "../service/getUsers.service.js";
-import {logError} from "../../utils/logError.js";
+import type { Request, Response } from "express";
+import { logError } from "../../utils/logError.js";
+import { getUsersService } from "../service/getUsers.service.js";
 
 /**
  * @openapi
@@ -17,11 +17,11 @@ import {logError} from "../../utils/logError.js";
  */
 
 export async function getUsersController(_req: Request, res: Response) {
-    try {
-        const result = await getUsersService();
-        return res.status(200).json(result);
-    } catch (error) {
-        logError(error);
-        return res.status(500).json({message: "Internal server error", error});
-    }
+	try {
+		const result = await getUsersService();
+		return res.status(200).json(result);
+	} catch (error) {
+		logError(error);
+		return res.status(500).json({ message: "Internal server error", error });
+	}
 }

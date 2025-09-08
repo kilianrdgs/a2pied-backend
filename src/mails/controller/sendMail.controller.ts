@@ -1,14 +1,15 @@
 import type { Request, Response } from "express";
+
 import { logError } from "../../utils/logError.js";
-import { createUserService } from "../service/createUser.service.js";
+import { sendMailService } from "../service/sendMail.service.js";
 
 /**
  * @openapi
- * /api/users:
+ * /api/mails:
  *   post:
- *     tags: [Users]
- *     summary: Crée un utilisateur (inscription)
- *     description: Crée un nouvel utilisateur à partir d'un email et d'un pseudo.
+ *     tags: [Mails]
+ *     summary: envoyer un mail
+ *     description: Envoie un mail à partir d'un email et d'un pseudo.
  *     requestBody:
  *       required: true
  *       content:
@@ -40,9 +41,9 @@ import { createUserService } from "../service/createUser.service.js";
  *         description: Email ou pseudo déjà utilisé
  */
 
-export async function createUserController(req: Request, res: Response) {
+export async function sendMailController(req: Request, res: Response) {
 	try {
-		const result = await createUserService(req.body);
+		const result = await sendMailService(req.body);
 		return res.status(201).json(result);
 	} catch (error: unknown) {
 		logError(error);

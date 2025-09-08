@@ -1,3 +1,3 @@
 export const logError = (error: unknown) => {
-    console.dir(error, {depth: 3})
-}
+	console.dir(error, { depth: 3 });
+};
