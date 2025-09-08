@@ -1,28 +1,28 @@
 import type {Request, Response} from "express";
 import {logError} from "../../utils/logError.js";
-import {deleteMobTypesService} from "../service/deleteMobTypes.service.js";
+import {deleteMobInstanceService} from "../service/deleteMobInstance.service.js";
 
 /**
  * @openapi
- * /api/mobTypes/:
+ * /api/mobInstances/:
  *   delete:
- *     tags: [MobTypes]
- *     summary: Supprime un type de monstre par son nom
+ *     tags: [MobInstances]
+ *     summary: Supprime une instance monstre par son id
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required: [name]
+ *             required: [id]
  *             properties:
  *               name:
  *                 type: string
- *                 example: MonMonstre
+ *                 example: "507f191e810c19729de860ea"
  *           examples:
  *             exemple:
  *               value:
- *                 name: "MonMonstre"
+ *                 name: "507f191e810c19729de860ea"
  *     responses:
  *       204:
  *         description: Supprimé (aucun contenu)
@@ -31,9 +31,9 @@ import {deleteMobTypesService} from "../service/deleteMobTypes.service.js";
  *       404:
  *         description: type de monstre introuvable
  */
-export async function deleteMobTypesController(req: Request, res: Response) {
+export async function deleteMobInstancesController(req: Request, res: Response) {
     try {
-        const result = await deleteMobTypesService(req.body);
+        const result = await deleteMobInstanceService(req.body);
         res.status(200).json(result);
     } catch (error) {
         logError(error);
