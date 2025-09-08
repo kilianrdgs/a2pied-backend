@@ -1,6 +1,6 @@
 import {RawData} from "ws";
 
-export function handleMessageService(ws, data: RawData) {
+export function handleMessageService(ws: WebSocket, data: RawData) {
 
     try {
         const messageText = data.toString();

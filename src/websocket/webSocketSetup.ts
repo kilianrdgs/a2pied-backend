@@ -7,11 +7,12 @@ export function webSocketSetup(server: any) {
         path: "/ws",
         clientTracking: true
     });
-    wss.on('connection', function connection(ws, request) {
-        
+    wss.on('connection', function connection(ws, _request) {
+
         const now = new Date().toISOString();
         const ip = (ws as any)?._socket?.remoteAddress || '-';
         console.log(`[WS CONNECT] ${now} ${ip}`);
+        // @ts-ignore
         ws.on('message', (data) => handleMessageService(ws, data));
 
         ws.on('close', function close(code, reason) {
