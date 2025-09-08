@@ -1,19 +1,24 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 import type { CreateUserDto } from "../../users/entities/dto/createUser.dto.js";
 
-const KEY_MAIL = process.env.KEY_MAIL || "";
-
-const resend = new Resend(KEY_MAIL);
+const transporter = nodemailer.createTransport({
+	service: "gmail",
+	auth: {
+		user: process.env.GMAIL_USER,
+		pass: process.env.GMAIL_PASS,
+	},
+});
 
 export async function sendMailService(userData: CreateUserDto) {
 	try {
-		resend.emails.send({
-			from: "onboarding@resend.dev",
+		const info = await transporter.sendMail({
+			from: `"Foot Factor" <${process.env.GMAIL_USER}>`,
 			to: userData.mail,
-			subject: `${userData.pseudo}, ton sbire est mort 😩`,
-			html: "ton sbire à été tué malheureusement... mais il n'a pas souffert. Venge le !",
+			subject: `${userData.pseudo}, Ton sbire est mort 😭`,
+			text: `ton sbire a été tué... heureusement il n'a pas souffert !`,
 		});
-		return { message: "Email sent" };
+
+		return { message: "Email sent", info };
 	} catch (error) {
 		return { message: "Error sending email", error };
 	}
