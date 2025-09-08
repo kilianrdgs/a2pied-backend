@@ -1,7 +1,6 @@
 import type {Request, Response} from "express";
 import {logError} from "../../utils/logError.js";
 import {getMobTypeByNameService, getMobTypesService} from "../service/getMobTypes.service.js";
-import {GetMobTypeByNameDto} from "../entities/dto/getMobTypeByName.dto.js";
 
 /**
  * @openapi
@@ -30,26 +29,19 @@ export async function getMobTypesController(_req: Request, res: Response) {
 
 /**
  * @openapi
- * /api/mobTypes/findByName:
+ * /api/mobTypes/{name}:
  *   get:
  *     tags: [MobTypes]
  *     summary: Retrouve un type de monstre par son nom
  *     description: Retourne un type de monstre
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required: [name]
- *             properties:
- *               name:
- *                 type: string
- *                 example: MonMonstre
- *           examples:
- *             exemple:
- *               value:
- *                 name: "MonMonstre"
+ *     parameters:
+ *       - in: path
+ *         name: name
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: "monMonstre"
+ *
  *     responses:
  *       200:
  *         description: OK
@@ -58,7 +50,7 @@ export async function getMobTypesController(_req: Request, res: Response) {
  */
 export async function getMobTypeByNameController(_req: Request, res: Response) {
     try {
-        const mobTypeName: GetMobTypeByNameDto = _req.body
+        const mobTypeName = _req.params.name
         const result = await getMobTypeByNameService(mobTypeName);
         return res.status(200).json(result);
     } catch (error) {
