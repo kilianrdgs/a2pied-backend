@@ -1,16 +1,22 @@
 import {RawData} from "ws";
 import {checkWebsocketCommunicationType} from "../utils/checkWebsocketCommunicationType.js";
 import {WebsocketCommunicationC2SType, WebsocketEventC2SEnum} from "../type/WebsocketCommunicationC2SType.js";
-import {confirmCommunicationReceipt, sendWebsocketJSONMessage} from "../utils/sendWebsocketJSONMessage.js";
+import {
+    confirmCommunicationReceipt,
+    sendWebsocketJSONMessage,
+    sendWebsocketJSONMessageToGODOT
+} from "../utils/sendWebsocketJSONMessage.js";
 import {WebsocketEventS2CEnum} from "../type/WebsocketCommunicationS2CType.js";
 import {ExtendedWebSocket, godotWs, isOpen} from "../type/websocketState.js";
+import {createMobInstanceServiceWithNameAndEmail} from "../../mobInstances/service/createMobInstance.service.js";
+import {getMobInstanceByIdPopulated} from "../../mobInstances/service/getMobInstances.service.js";
 
 export function handleMessageService(ws: ExtendedWebSocket, data: RawData) {
     try {
 
         if (ws._role !== "godot") {
             if (godotWs && isOpen(godotWs)) {
-                sendWebsocketJSONMessage(godotWs, {event: WebsocketEventS2CEnum.COMMUNICATION, data: {status: "ACK"}})
+                sendWebsocketJSONMessageToGODOT({event: WebsocketEventS2CEnum.COMMUNICATION, data: {status: "ACK"}})
             } else {
                 sendWebsocketJSONMessage(ws, {
                     event: WebsocketEventS2CEnum.COMMUNICATION,
@@ -38,16 +44,25 @@ export function handleMessageService(ws: ExtendedWebSocket, data: RawData) {
 }
 
 
-function handleEvent(websocketCommunicationType: WebsocketCommunicationC2SType, ws: ExtendedWebSocket) {
+async function handleEvent(websocketCommunicationType: WebsocketCommunicationC2SType, ws: ExtendedWebSocket) {
 
     switch (websocketCommunicationType.event) {
         case WebsocketEventC2SEnum.MONSTER_BOUGHT:
-            console.log(WebsocketEventC2SEnum.MONSTER_BOUGHT)
-            sendWebsocketJSONMessage(ws, {
-                event: WebsocketEventS2CEnum.COMMUNICATION,
-                data: {received: websocketCommunicationType.event}
+
+            const mobInstance = await createMobInstanceServiceWithNameAndEmail({
+                monsterName: websocketCommunicationType.data.monsterName as string,
+                userEmail: websocketCommunicationType.data.userEmail as string
             })
 
+            const mobInstancePopulated = await getMobInstanceByIdPopulated(mobInstance._id.toString())
+            sendWebsocketJSONMessageToGODOT({
+                event: WebsocketEventS2CEnum.MONSTER_SPAWN,
+                data: {
+                    mobType: mobInstancePopulated.mobType,
+                    user: mobInstancePopulated.user,
+                    mobInstanceId: mobInstancePopulated._id.toString()
+                }
+            })
             break;
         case WebsocketEventC2SEnum.MONSTER_KILL:
             console.log(WebsocketEventC2SEnum.MONSTER_KILL)

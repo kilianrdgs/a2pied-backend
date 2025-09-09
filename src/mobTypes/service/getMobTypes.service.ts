@@ -6,8 +6,12 @@ export async function getMobTypesService() {
     return MobTypeModel.find()
 }
 
-export async function getMobTypeByNameService(getMobTypeName: string): Promise<IMobType[]> {
-    return MobTypeModel.find({name: {$regex: `^${getMobTypeName}$`, $options: 'i'}});
+export async function getMobTypeByNameService(getMobTypeName: string): Promise<HydratedDocument<IMobType>> {
+    const mobType = await MobTypeModel.findOne({name: {$regex: `^${getMobTypeName}$`, $options: 'i'}});
+    if (!mobType) {
+        throw new Error("MobType Not Found")
+    }
+    return mobType
 }
 
 export async function getMobTypeService(id: string): Promise<HydratedDocument<IMobType>> {

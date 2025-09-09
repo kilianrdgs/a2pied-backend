@@ -1,4 +1,4 @@
-import {IMobInstance} from "../mobInstance.interface.js";
-
-export interface CreateMobInstanceDto extends IMobInstance {
+export interface CreateMobInstanceDto {
+    user: string,
+    mobType: string
 }
