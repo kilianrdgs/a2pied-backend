@@ -1,4 +1,4 @@
-import {WebsocketCommunicationC2SType, WebsocketEventC2SEnum} from "../websocket/type/WebsocketCommunicationC2SType.js";
+import {WebsocketCommunicationC2SType, WebsocketEventC2SEnum} from "../type/WebsocketCommunicationC2SType.js";
 
 export const checkWebsocketCommunicationType = (data: string): WebsocketCommunicationC2SType => {
     let json = {}

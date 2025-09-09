@@ -7,7 +7,7 @@ import {connectMongoose} from "./db/mongo.js";
 import swaggerOptions from "./docs/swagger.js";
 import globalRouter from "./router.js";
 import {createServer} from "node:http";
-import {webSocketSetup} from "./websocket/webSocketSetup.js";
+import {webSocketSetup} from "./websocket/utils/webSocketSetup.js";
 
 
 const app = express();
