@@ -13,6 +13,7 @@ import {webSocketSetup} from "./websocket/utils/webSocketSetup.js";
 const app = express();
 const server = createServer(app);
 const PORT = process.env.PORT;
+const FRONT_URL = process.env.FRONT_URL ?? ""
 
 const specs = swaggerJsdoc(swaggerOptions);
 
@@ -20,7 +21,7 @@ app.use(express.json());
 
 app.use(
     cors({
-        origin: ["*"],
+        origin: ["*", FRONT_URL],
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization"],
     }),
