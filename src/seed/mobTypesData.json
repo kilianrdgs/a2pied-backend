@@ -1,0 +1,28 @@
+{
+  "mobTypesData": [
+    {
+      "cost": 40,
+      "life": 110,
+      "damage": 6,
+      "name": "fish"
+    },
+    {
+      "cost": 50,
+      "life": 120,
+      "damage": 9,
+      "name": "spider"
+    },
+    {
+      "cost": 60,
+      "life": 130,
+      "damage": 12,
+      "name": "snail"
+    },
+    {
+      "cost": 70,
+      "life": 140,
+      "damage": 15,
+      "name": "dog"
+    }
+  ]
+}

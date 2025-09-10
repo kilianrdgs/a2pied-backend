@@ -1,21 +1,21 @@
-import {logError} from "../../utils/logError.js";
+import {seedDbMobTypesService} from "../service/seedDbMobTypes.service.js";
 import type {Request, Response} from "express";
-import {createMobTypeService} from "../service/createMobTypes.service.js";
+import {logError} from "../../utils/logError.js";
 
 /**
  * @openapi
- * /api/mobtypes:
+ * /api/mobtypes/seeddb:
  *   post:
  *     tags: [MobTypes]
  *     summary: Crée un Type de monstre
  *     description: Crée un nouveau Type de monstre
  *     requestBody:
- *       required: true
+ *       required: false
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required: [cost,name,life,damage]
+ *             type: array
+ *             item : object
  *             properties:
  *               cost:
  *                 type: string
@@ -34,7 +34,11 @@ import {createMobTypeService} from "../service/createMobTypes.service.js";
  *           examples:
  *             exemple:
  *               value:
- *                   name: MonMonstre
+ *                 - name: dog
+ *                   cost: 250
+ *                   damage: 10
+ *                   life: 50
+ *                 - name: snail
  *                   cost: 250
  *                   damage: 10
  *                   life: 50
@@ -43,11 +47,10 @@ import {createMobTypeService} from "../service/createMobTypes.service.js";
  *         description: Type de monstre créé
  *       500:
  *          description: Erreur interne
- *
  */
-export async function createMobTypesController(req: Request, res: Response) {
+export async function seedDbMobTypesController(req: Request, res: Response) {
     try {
-        const result = await createMobTypeService(req.body);
+        const result = await seedDbMobTypesService(req.body);
         return res.status(201).json(result);
     } catch (error: unknown) {
         logError(error);
