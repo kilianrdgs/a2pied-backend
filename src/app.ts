@@ -3,12 +3,11 @@ import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import "dotenv/config";
 import cors from "cors";
-import { connectMongoose } from "./db/mongo.js";
+import {connectMongoose} from "./db/mongo.js";
 import swaggerOptions from "./docs/swagger.js";
 import globalRouter from "./router.js";
-import { createServer } from "node:http";
-import { webSocketSetup } from "./websocket/utils/webSocketSetup.js";
-import { apiKeyMiddleware } from "./middlewares/apiKey.js";
+import {createServer} from "node:http";
+import {webSocketSetup} from "./websocket/utils/webSocketSetup.js";
 
 const app = express();
 const server = createServer(app);
@@ -28,23 +27,26 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  res.send("ok");
+    res.send("ok");
 });
 
 app.use("/doc", swaggerUi.serve, swaggerUi.setup(specs));
-app.use("/api", apiKeyMiddleware, globalRouter);
+app.use("/api",
+    //todo : Reactiver lorsque le wrapper de fetch est fait en front
+    /*apiKeyMiddleware,*/
+    globalRouter);
 
 webSocketSetup(server);
 connectMongoose()
-  .then(() => {
-    server.listen(PORT, () => {
-      console.log(`🚀 API running at http://localhost:${PORT}`);
-      console.log("--------------------------------");
-      console.log(`📖 Swagger UI at http://localhost:${PORT}/doc`);
-      console.log("--------------------------------");
+    .then(() => {
+        server.listen(PORT, () => {
+            console.log(`🚀 API running at http://localhost:${PORT}`);
+            console.log("--------------------------------");
+            console.log(`📖 Swagger UI at http://localhost:${PORT}/doc`);
+            console.log("--------------------------------");
+        });
+    })
+    .catch((e) => {
+        console.error("❌ Failed to start server:", e);
+        process.exit(1);
     });
-  })
-  .catch((e) => {
-    console.error("❌ Failed to start server:", e);
-    process.exit(1);
-  });
