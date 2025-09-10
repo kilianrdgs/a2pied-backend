@@ -1,6 +1,9 @@
-import type {Request, Response} from "express";
-import {logError} from "../../utils/logError.js";
-import {getMobTypeByNameService, getMobTypesService} from "../service/getMobTypes.service.js";
+import type { Request, Response } from "express";
+import { logError } from "../../utils/logError.js";
+import {
+	getMobTypeByNameService,
+	getMobTypesService,
+} from "../service/getMobTypes.service.js";
 
 /**
  * @openapi
@@ -17,15 +20,14 @@ import {getMobTypeByNameService, getMobTypesService} from "../service/getMobType
  */
 
 export async function getMobTypesController(_req: Request, res: Response) {
-    try {
-        const result = await getMobTypesService();
-        return res.status(200).json(result);
-    } catch (error) {
-        logError(error);
-        return res.status(500).json({message: "Internal server error", error});
-    }
+	try {
+		const result = await getMobTypesService();
+		return res.status(200).json(result);
+	} catch (error) {
+		logError(error);
+		return res.status(500).json({ message: "Internal server error", error });
+	}
 }
-
 
 /**
  * @openapi
@@ -49,12 +51,12 @@ export async function getMobTypesController(_req: Request, res: Response) {
  *         description: Erreur serveur
  */
 export async function getMobTypeByNameController(_req: Request, res: Response) {
-    try {
-        const mobTypeName = _req.params.name
-        const result = await getMobTypeByNameService(mobTypeName);
-        return res.status(200).json(result);
-    } catch (error) {
-        logError(error);
-        return res.status(500).json({message: "Internal server error", error});
-    }
+	try {
+		const mobTypeName = _req.params.name;
+		const result = await getMobTypeByNameService(mobTypeName);
+		return res.status(200).json(result);
+	} catch (error) {
+		logError(error);
+		return res.status(500).json({ message: "Internal server error", error });
+	}
 }

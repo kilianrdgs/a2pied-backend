@@ -1,7 +1,7 @@
 import { Router } from "express";
 import mailRouter from "./mails/router.js";
-import userRouter from "./users/router.js";
 import mobTypesRouter from "./mobTypes/mobTypes.router.js";
+import userRouter from "./users/router.js";
 
 const globalRouter = Router();
 

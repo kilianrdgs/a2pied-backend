@@ -1,4 +1,3 @@
-import {IMobType} from "../mobType.interface.js";
+import type { IMobType } from "../mobType.interface.js";
 
-export interface CreateMobTypeDto extends IMobType {
-}
+export interface CreateMobTypeDto extends IMobType {}

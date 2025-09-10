@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
-import {IMobType} from "./mobType.interface.js";
+import type { IMobType } from "./mobType.interface.js";
 
-const {Schema} = mongoose;
+const { Schema } = mongoose;
 
 const mobTypeSchema = new Schema<IMobType>({
-    cost: String,
-    life: String,
-    damage: Number,
-    name: String,
+	cost: String,
+	life: String,
+	damage: Number,
+	name: String,
 });
 
-export const MobTypeModel = mongoose.model('MobType', mobTypeSchema);
+export const MobTypeModel = mongoose.model("MobType", mobTypeSchema);

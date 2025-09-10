@@ -1,6 +1,6 @@
 export interface IMobType {
-    name: string;
-    cost: string;
-    life: string;
-    damage: number;
+	name: string;
+	cost: string;
+	life: string;
+	damage: number;
 }

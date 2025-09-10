@@ -1,6 +1,6 @@
-import {logError} from "../../utils/logError.js";
-import type {Request, Response} from "express";
-import {createMobTypesService} from "../service/createMobTypes.service.js";
+import type { Request, Response } from "express";
+import { logError } from "../../utils/logError.js";
+import { createMobTypesService } from "../service/createMobTypes.service.js";
 
 /**
  * @openapi
@@ -46,11 +46,11 @@ import {createMobTypesService} from "../service/createMobTypes.service.js";
  *
  */
 export async function createMobTypesController(req: Request, res: Response) {
-    try {
-        const result = await createMobTypesService(req.body);
-        return res.status(201).json(result);
-    } catch (error: unknown) {
-        logError(error);
-        return res.status(500).json({message: "Internal server error", error});
-    }
+	try {
+		const result = await createMobTypesService(req.body);
+		return res.status(201).json(result);
+	} catch (error: unknown) {
+		logError(error);
+		return res.status(500).json({ message: "Internal server error", error });
+	}
 }

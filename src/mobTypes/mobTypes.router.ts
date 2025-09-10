@@ -1,9 +1,11 @@
 import express from "express";
-import {getMobTypeByNameController, getMobTypesController} from "./controller/getMobTypes.controller.js";
-import {createMobTypesController} from "./controller/createMobTypes.controller.js";
-import {deleteAllMobTypesController} from "./controller/deleteAllMobTypes.controller.js";
-import {deleteMobTypesController} from "./controller/deleteMobTypes.controller.js";
-
+import { createMobTypesController } from "./controller/createMobTypes.controller.js";
+import { deleteAllMobTypesController } from "./controller/deleteAllMobTypes.controller.js";
+import { deleteMobTypesController } from "./controller/deleteMobTypes.controller.js";
+import {
+	getMobTypeByNameController,
+	getMobTypesController,
+} from "./controller/getMobTypes.controller.js";
 
 const mobTypesRouter = express.Router();
 

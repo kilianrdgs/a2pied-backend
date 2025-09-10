@@ -1,7 +1,6 @@
-import type {Request, Response} from "express";
-import {logError} from "../../utils/logError.js";
-import {deleteAllMobTypesService} from "../service/deleteAllMobTypes.service.js";
-
+import type { Request, Response } from "express";
+import { logError } from "../../utils/logError.js";
+import { deleteAllMobTypesService } from "../service/deleteAllMobTypes.service.js";
 
 /**
  * @openapi
@@ -27,12 +26,15 @@ import {deleteAllMobTypesService} from "../service/deleteAllMobTypes.service.js"
  *         description: Erreur serveur
  */
 
-export async function deleteAllMobTypesController(_req: Request, res: Response) {
-    try {
-        const result = await deleteAllMobTypesService();
-        res.status(200).json(result);
-    } catch (error) {
-        logError(error);
-        return res.status(500).json({message: "Internal server error", error});
-    }
+export async function deleteAllMobTypesController(
+	_req: Request,
+	res: Response,
+) {
+	try {
+		const result = await deleteAllMobTypesService();
+		res.status(200).json(result);
+	} catch (error) {
+		logError(error);
+		return res.status(500).json({ message: "Internal server error", error });
+	}
 }
