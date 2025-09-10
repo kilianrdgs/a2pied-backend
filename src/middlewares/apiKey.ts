@@ -7,7 +7,7 @@ export function apiKeyMiddleware(
 	res: Response,
 	next: NextFunction,
 ): void {
-	if (process.env.ENV === "DEV") {
+	if (process.env.NODE_ENV === "development") {
 		next();
 		return;
 	}
