@@ -10,6 +10,7 @@ import {
 } from "../../mobTypes/service/getMobTypes.service.js";
 import {IMobType} from "../../mobTypes/entities/mobType.interface.js";
 import {IUser} from "../../users/entities/user.interface.js";
+import {getDateFormatted} from "../../utils/getDateFormatted.js";
 
 export async function createMobInstancesService(mobInstancesData: CreateMobInstanceDto): Promise<HydratedDocument<IMobInstance>> {
     try {
@@ -17,7 +18,7 @@ export async function createMobInstancesService(mobInstancesData: CreateMobInsta
         const mobTypeId = mobInstancesData.mobType;
         await getUserService(userId.toString());
         await getMobTypeService(mobTypeId.toString())
-        return MobInstanceModel.create({...mobInstancesData, spawned: false})
+        return MobInstanceModel.create({...mobInstancesData, createdAt: getDateFormatted(new Date())})
     } catch (e) {
         throw e
     }
@@ -31,7 +32,7 @@ export async function createMobInstanceServiceWithNameAndEmail(data: {
     const mobType: HydratedDocument<IMobType> = await getMobTypeByNameService(data.monsterName)
     const user: HydratedDocument<IUser> = await getUserByMailService(data.userEmail)
     const mobInstancesData: CreateMobInstanceDto = {mobType: mobType._id.toString(), user: user._id.toString()}
-    return await MobInstanceModel.create({...mobInstancesData, spawned: false})
+    return await MobInstanceModel.create({...mobInstancesData, createdAt: getDateFormatted(new Date())})
 
 }
 
@@ -41,6 +42,6 @@ export async function createMobInstanceRandomService(): Promise<HydratedDocument
     const users: HydratedDocument<IUser>[] = await getUsersService()
     const user: HydratedDocument<IUser> = users[0]
     const mobInstancesData: CreateMobInstanceDto = {mobType: mobType._id.toString(), user: user._id.toString()}
-    return await MobInstanceModel.create({...mobInstancesData, spawned: false})
+    return await MobInstanceModel.create({...mobInstancesData, createdAt: getDateFormatted(new Date())})
 
 }
