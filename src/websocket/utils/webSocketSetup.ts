@@ -1,7 +1,15 @@
 import {WebSocketServer} from "ws";
 import {handleMessageService} from "../service/handleMessage.service.js";
-import {ExtendedWebSocket, setGodot, websocketClients} from "../type/websocketState.js";
+import {
+    cleanWebsocketClients,
+    ExtendedWebSocket,
+    setGodot,
+    websocketClients,
+    WS_CLIENT_ROLE,
+    WS_GODOT_ROLE
+} from "../type/websocketState.js";
 import {extractTokenFromURL, isTokenGodot} from "./utils.js";
+import {randomUUID} from "node:crypto";
 
 export function webSocketSetup(server: any) {
     const wss = new WebSocketServer({
@@ -10,27 +18,34 @@ export function webSocketSetup(server: any) {
         clientTracking: true
     });
 
+    //TODO : changer le timer
+    setInterval(cleanWebsocketClients, 1000);
+
+
     wss.on('connection', function connection(wsBase, request) {
 
         const token = extractTokenFromURL(request)
         const ws = wsBase as ExtendedWebSocket;
         if (isTokenGodot(token)) {
-            ws._role = "godot";
+            ws._role = WS_GODOT_ROLE;
             setGodot(ws);
-            console.log("godotWS est set ! ")
+            console.log("[WS CONNECT] GODOT_WS est set !")
         } else {
-            ws._role = "client"
+            ws._role = WS_CLIENT_ROLE;
             if (token) {
-                websocketClients.set(token, ws);
+                if (!websocketClients.get(token)) websocketClients.set(token, ws);
+                const id = randomUUID()
+                websocketClients.set(`${token}${id}`, ws)
             } else {
-                websocketClients.set(`unknown-${websocketClients.size}`, ws)
+                const id = randomUUID()
+                websocketClients.set(`unknown-${id}`, ws)
             }
         }
+
 
         const now = new Date().toISOString();
         const ip = (ws as any)?._socket?.remoteAddress || '-';
         console.log(`[WS CONNECT] ${now} ${ip}`);
-        // @ts-ignore
         ws.on('message', (data) => handleMessageService(ws, data));
 
         ws.on('close', function close(code, reason) {

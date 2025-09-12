@@ -49,6 +49,11 @@ export async function handleMonsterKillEventService(websocketCommunicationType: 
         if (userTargetWebsocket) {
             sendWebsocketJSONMessage(userTargetWebsocket, {event: WebsocketEventS2CEnum.MONSTER_KILL, data: {mobType}})
         } else {
+            for (const [id, ws] of websocketClients) {
+                if (id.includes(user.mail)) {
+                    sendWebsocketJSONMessage(ws, {event: WebsocketEventS2CEnum.MONSTER_KILL, data: {mobType}})
+                }
+            }
             throw new Error("L\'utilisateur à l'origine du monstre n'a pas été retrouvé")
         }
     }
