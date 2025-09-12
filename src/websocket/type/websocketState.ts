@@ -19,6 +19,8 @@ export function cleanWebsocketClients() {
             websocketClients.delete(id);
         }
     }
+
+    if (godotWs && !isOpen(godotWs)) setGodot(null)
 }
 
 export function isOpen(ws: WebSocket): boolean {

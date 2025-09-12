@@ -43,8 +43,9 @@ app.use(statusMonitor({path: '/status'}));
 app.get('/status-ws', (_req, res) => {
     res.type('html').send(`
     <html lang="fr"><body style="font-family:system-ui">
-      <h3>WebSocket & Proc</h3>
-       <div>WS clients count: <span id="ws_count">...</span></div>
+      <h2>WebSocket & Proc</h2>
+      <div>WS GODOT: <span id="ws_godot">❌</span></div>
+      <div>WS clients count: <span id="ws_count">...</span></div>
       <div>WS clients mail: <span id="ws_mail">...</span></div>
       <div>RAM (RSS): <span id="mem">......</span></div>
       <div >Uptime: <span id="up">...</span></div>
@@ -52,6 +53,8 @@ app.get('/status-ws', (_req, res) => {
         async function tick(){
           const r = await fetch('/api/ws/status-data'); 
           const d = await r.json();
+          
+          document.getElementById('ws_godot').textContent =d.ws_godot===true ? "✅":"❌";
           document.getElementById('ws_mail').textContent = d.ws_clients_mail;
           document.getElementById('ws_count').textContent = d.ws_clients_count;
           document.getElementById('mem').textContent =  d.rss_mb + ' MB';
