@@ -42,7 +42,7 @@ app.use(statusMonitor({path: '/status'}));
 
 app.get('/status-ws', (_req, res) => {
     res.type('html').send(`
-    <html><body style="font-family:system-ui">
+    <html lang="fr"><body style="font-family:system-ui">
       <h3>WebSocket & Proc</h3>
        <div>WS clients count: <span id="ws_count">...</span></div>
       <div>WS clients mail: <span id="ws_mail">...</span></div>

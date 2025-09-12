@@ -4,7 +4,7 @@ import {websocketClients} from "../type/websocketState.js";
 export async function getWebsocketStatusData(_req: Request, res: Response) {
     const ws_clients_mail: string[] = []
     if (websocketClients.size > 0) {
-        for (const [id, ws] of websocketClients) {
+        for (const [id] of websocketClients) {
             ws_clients_mail.push(id)
         }
     }
