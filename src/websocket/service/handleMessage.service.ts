@@ -1,9 +1,13 @@
 import {RawData} from "ws";
 import {checkWebsocketCommunicationType} from "../utils/checkWebsocketCommunicationType.js";
 import {WebsocketCommunicationC2SType, WebsocketEventC2SEnum} from "../type/WebsocketCommunicationC2SType.js";
-import {sendWebsocketJSONMessage, sendWebsocketJSONMessageToGODOT} from "../utils/sendWebsocketJSONMessage.js";
-import {WebsocketEventS2CEnum} from "../type/WebsocketCommunicationS2CType.js";
-import {ExtendedWebSocket, godotWs, isOpen} from "../type/websocketState.js";
+import {
+    broadCastJSONMessage,
+    sendWebsocketJSONMessage,
+    sendWebsocketJSONMessageToGODOT
+} from "../utils/sendWebsocketJSONMessage.js";
+import {WebsocketCommunicationS2CType, WebsocketEventS2CEnum} from "../type/WebsocketCommunicationS2CType.js";
+import {C2S_EVENT_TO_BROADCAST, ExtendedWebSocket, godotWs, isOpen, WS_GODOT_ROLE} from "../type/websocketState.js";
 import {handleMonsterBoughtEventService} from "./handleMonsterBoughtEvent.service.js";
 import {handleMonsterKillEventService} from "./handleMonsterKillEvent.service.js";
 
@@ -40,8 +44,9 @@ import {handleMonsterKillEventService} from "./handleMonsterKillEvent.service.js
 export function handleMessageService(ws: ExtendedWebSocket, data: RawData) {
     try {
 
-        if (ws._role !== "godot") {
+        if (ws._role !== WS_GODOT_ROLE) {
             if (godotWs && isOpen(godotWs)) {
+                //Juste pour ping GODOT et lui dire coucou il y a quelqu'un dautre qui vient de se co
                 sendWebsocketJSONMessageToGODOT({event: WebsocketEventS2CEnum.COMMUNICATION, data: {status: "ACK"}})
             } else {
                 sendWebsocketJSONMessage(ws, {
@@ -51,7 +56,7 @@ export function handleMessageService(ws: ExtendedWebSocket, data: RawData) {
             }
         }
         const messageText = data.toString();
-        console.log('Received:', messageText);
+        console.log('[WS EVENT] Received:', messageText);
         try {
             const websocketCommunication: WebsocketCommunicationC2SType = checkWebsocketCommunicationType(messageText)
             handleEvent(websocketCommunication, ws)
@@ -103,14 +108,42 @@ export function handleMessageService(ws: ExtendedWebSocket, data: RawData) {
  */
 async function handleEvent(websocketCommunicationType: WebsocketCommunicationC2SType, ws: ExtendedWebSocket) {
 
-    if (websocketCommunicationType.event === WebsocketEventC2SEnum.MONSTER_BOUGHT) {
-        await handleMonsterBoughtEventService(websocketCommunicationType, ws)
-    } else if (websocketCommunicationType.event === WebsocketEventC2SEnum.MONSTER_KILL) {
-        await handleMonsterKillEventService(websocketCommunicationType)
+    try {
+        const broadcastMessage: WebsocketCommunicationS2CType = {event: WebsocketEventS2CEnum.BROADCAST}
 
-    } else if (websocketCommunicationType.event === WebsocketEventC2SEnum.HELLO) {
-        console.log(WebsocketEventC2SEnum.HELLO)
-    } else {
-        console.log("Evenement non reconnu")
+        if (websocketCommunicationType.event === WebsocketEventC2SEnum.MONSTER_BOUGHT) {
+            const eventPayload: {
+                data: {
+                    monsterName: string,
+                    userPseudo: string,
+                }
+            } = await handleMonsterBoughtEventService(websocketCommunicationType, ws)
+
+            broadcastMessage.data = {
+                event: websocketCommunicationType.event,
+                data: eventPayload.data,
+                timestamp: new Date().getTime().toString()
+            }
+        } else if (websocketCommunicationType.event === WebsocketEventC2SEnum.MONSTER_KILL) {
+
+            const eventPayload = await handleMonsterKillEventService(websocketCommunicationType)
+            broadcastMessage.data = {
+                event: websocketCommunicationType.event,
+                data: eventPayload.data,
+                timestamp: new Date().getTime().toString()
+            }
+        } else if (websocketCommunicationType.event === WebsocketEventC2SEnum.HELLO) {
+            console.log(WebsocketEventC2SEnum.HELLO)
+        } else {
+            console.log("Evenement non reconnu")
+        }
+
+        if (C2S_EVENT_TO_BROADCAST.includes(websocketCommunicationType.event)) {
+            await broadCastJSONMessage(broadcastMessage);
+        }
+
+    } catch (e) {
+        console.log("Une erreur est survenue dans handleEvent")
+        console.log(e)
     }
 }

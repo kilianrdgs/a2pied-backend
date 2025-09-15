@@ -5,6 +5,7 @@ export enum WebsocketEventS2CEnum {
     COMMUNICATION = "COMMUNICATION",
     MONSTER_KILL = "MONSTER_KILL",
     MONSTER_SPAWN = "MONSTER_SPAWN",
+    BROADCAST = "BROADCAST"
 
 }
 

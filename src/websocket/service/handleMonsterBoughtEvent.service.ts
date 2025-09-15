@@ -1,9 +1,9 @@
 import {WebsocketCommunicationC2SType} from "../type/WebsocketCommunicationC2SType.js";
 import {ExtendedWebSocket} from "../type/websocketState.js";
-import {getMobInstanceByIdPopulated} from "../../mobInstances/service/getMobInstances.service.js";
-import {createMobInstanceServiceWithNameAndEmail} from "../../mobInstances/service/createMobInstance.service.js";
 import {sendWebsocketJSONMessage, sendWebsocketJSONMessageToGODOT} from "../utils/sendWebsocketJSONMessage.js";
 import {WebsocketEventS2CEnum} from "../type/WebsocketCommunicationS2CType.js";
+import {createMobInstanceServiceWithNameAndEmail} from "../../mobInstances/service/createMobInstance.service.js";
+import {getMobInstanceByIdPopulated} from "../../mobInstances/service/getMobInstances.service.js";
 
 /**
  * Gère l'événement `MONSTER_BOUGHT` envoyé par un client WebSocket.
@@ -43,14 +43,22 @@ import {WebsocketEventS2CEnum} from "../type/WebsocketCommunicationS2CType.js";
  * // Godot reçoit un MONSTER_SPAWN, et le client reçoit un accusé.
  * ```
  */
-export async function handleMonsterBoughtEventService(websocketCommunicationType: WebsocketCommunicationC2SType, ws: ExtendedWebSocket) {
+export async function handleMonsterBoughtEventService(websocketCommunicationType: WebsocketCommunicationC2SType, ws: ExtendedWebSocket): Promise<{
+    data: {
+        monsterName: string,
+        userPseudo: string,
+    }
+}> {
     const {monsterName, userEmail} = websocketCommunicationType.data
     const mobInstance = await createMobInstanceServiceWithNameAndEmail({
         monsterName: monsterName as string,
         userEmail: userEmail as string
     })
 
+
     const mobInstancePopulated = await getMobInstanceByIdPopulated(mobInstance._id.toString())
+    console.log(`[GAME] Monster ${monsterName} bought by ${userEmail} id: ${mobInstancePopulated._id.toString()}`)
+
     sendWebsocketJSONMessageToGODOT({
         event: WebsocketEventS2CEnum.MONSTER_SPAWN,
         data: {
@@ -67,4 +75,11 @@ export async function handleMonsterBoughtEventService(websocketCommunicationType
             info: `${monsterName} spawned by ${userEmail}`
         }
     })
+
+    return {
+        data: {
+            monsterName: monsterName as string,
+            userPseudo: mobInstancePopulated.user.pseudo,
+        }
+    }
 }
