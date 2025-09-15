@@ -5,6 +5,7 @@ import {getMobInstanceByIdPopulated} from "../../mobInstances/service/getMobInst
 import {WebsocketEventS2CEnum} from "../type/WebsocketCommunicationS2CType.js";
 import {sendMailService} from "../../mails/service/sendMail.service.js";
 import {deleteMobInstanceService} from "../../mobInstances/service/deleteMobInstance.service.js";
+import {monsterKillUpdate} from "../../game/gameState.js";
 
 /**
  * Gère l'événement `MONSTER_KILL` envoyé par un client WebSocket (le serveur de jeu).
@@ -43,8 +44,7 @@ export async function handleMonsterKillEventService(websocketCommunicationType: 
         const {user, mobType} = mobInstance
         await sendMailService(user);
         await deleteMobInstanceService({id: mobInstanceId})
-
-
+        monsterKillUpdate()
         const userTargetWebsocket = websocketClients.get(user.mail)
         if (userTargetWebsocket) {
             sendWebsocketJSONMessage(userTargetWebsocket, {event: WebsocketEventS2CEnum.MONSTER_KILL, data: {mobType}})

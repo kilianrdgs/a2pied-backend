@@ -1,5 +1,6 @@
 import type {Request, Response} from "express";
 import {godotWs, websocketClients} from "../type/websocketState.js";
+import {getGameState, resetGameState} from "../../game/gameState.js";
 
 export async function getWebsocketStatusData(_req: Request, res: Response) {
     const ws_clients_mail: string[] = []
@@ -15,5 +16,11 @@ export async function getWebsocketStatusData(_req: Request, res: Response) {
         ws_clients_count: websocketClients.size,
         rss_mb: (process.memoryUsage().rss / 1024 / 1024).toFixed(1),
         uptime_s: Math.floor(process.uptime()),
+        gameState: getGameState()
     });
+}
+
+export async function resetGameStateController(_req: Request, res: Response) {
+    resetGameState()
+    res.status(200).send("OK");
 }

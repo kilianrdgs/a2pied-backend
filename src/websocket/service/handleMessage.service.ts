@@ -10,6 +10,7 @@ import {WebsocketCommunicationS2CType, WebsocketEventS2CEnum} from "../type/Webs
 import {C2S_EVENT_TO_BROADCAST, ExtendedWebSocket, godotWs, isOpen, WS_GODOT_ROLE} from "../type/websocketState.js";
 import {handleMonsterBoughtEventService} from "./handleMonsterBoughtEvent.service.js";
 import {handleMonsterKillEventService} from "./handleMonsterKillEvent.service.js";
+import {resetGameState} from "../../game/gameState.js";
 
 /**
  * Gère la réception et le traitement d'un message WebSocket.
@@ -134,6 +135,16 @@ async function handleEvent(websocketCommunicationType: WebsocketCommunicationC2S
             }
         } else if (websocketCommunicationType.event === WebsocketEventC2SEnum.HELLO) {
             console.log(WebsocketEventC2SEnum.HELLO)
+        } else if (websocketCommunicationType.event === WebsocketEventC2SEnum.UPDATE_STATE) {
+            if (websocketCommunicationType.data.action === "reset") {
+                resetGameState()
+                broadcastMessage.data = {
+                    event: websocketCommunicationType.event,
+                    data: {action: "reset"},
+                    timestamp: new Date().getTime().toString()
+                }
+            }
+
         } else {
             console.log("Evenement non reconnu")
         }

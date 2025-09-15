@@ -23,7 +23,6 @@ export function webSocketSetup(server: any) {
 
 
     wss.on('connection', function connection(wsBase, request) {
-
         const token = extractTokenFromURL(request)
         const ws = wsBase as ExtendedWebSocket;
         if (isTokenGodot(token)) {

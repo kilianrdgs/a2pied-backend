@@ -20,7 +20,9 @@ export enum WebsocketEventC2SEnum {
      * Événement simple de test/d'initialisation de communication.
      * ➝ Actuellement loggé uniquement côté serveur.
      */
-    HELLO = "HELLO"
+    HELLO = "HELLO",
+    UPDATE_STATE = "UPDATE_STATE"
+
 }
 
 /**

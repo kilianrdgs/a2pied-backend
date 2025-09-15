@@ -48,7 +48,12 @@ app.get('/status-ws', (_req, res) => {
       <div>WS clients count: <span id="ws_count">...</span></div>
       <div>WS clients mail: <span id="ws_mail">...</span></div>
       <div>RAM (RSS): <span id="mem">......</span></div>
-      <div >Uptime: <span id="up">...</span></div>
+      <div>Uptime: <span id="up">...</span></div>
+      <div>Monster Spawned : <span id="monsterSpawned">...</span></div>
+      <div>Monster Killed : <span id="monsterKilled">...</span></div>
+            <!-- Bouton pour resetGameState -->
+      <button id="resetGameStateBtn">Réinitialiser l'état du jeu</button>
+      <div id="resetResult"></div>
       <script>
         async function tick(){
           const r = await fetch('/api/ws/status-data'); 
@@ -59,9 +64,28 @@ app.get('/status-ws', (_req, res) => {
           document.getElementById('ws_count').textContent = d.ws_clients_count;
           document.getElementById('mem').textContent =  d.rss_mb + ' MB';
           document.getElementById('up').textContent =  + d.uptime_s + ' s';
+          
+          document.getElementById('monsterSpawned').textContent =  + d.gameState.monsterSpawned.toString();
+          document.getElementById('monsterKilled').textContent =  + d.gameState.monsterKill.toString();
+          
         }
         tick(); 
         setInterval(tick, 1000);
+        
+          // Gestionnaire du bouton reset
+        document.getElementById('resetGameStateBtn').addEventListener('click', async () => {
+          try {
+            const response = await fetch('/api/ws/reset-game-state', { method: 'GET' });
+            if (response.ok) {
+              document.getElementById('resetResult').textContent = "Jeu réinitialisé avec succès.";
+            } else {
+             const json = await response.json()
+              document.getElementById('resetResult').textContent = "Erreur lors de la réinitialisation." + json;
+            }
+          } catch (error) {
+            document.getElementById('resetResult').textContent = "Erreur réseau ou serveur.";
+          }
+        });
       </script>
     </body></html>
   `);

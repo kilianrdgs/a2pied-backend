@@ -4,6 +4,7 @@ import {sendWebsocketJSONMessage, sendWebsocketJSONMessageToGODOT} from "../util
 import {WebsocketEventS2CEnum} from "../type/WebsocketCommunicationS2CType.js";
 import {createMobInstanceServiceWithNameAndEmail} from "../../mobInstances/service/createMobInstance.service.js";
 import {getMobInstanceByIdPopulated} from "../../mobInstances/service/getMobInstances.service.js";
+import {monsterBoughtUpdate} from "../../game/gameState.js";
 
 /**
  * Gère l'événement `MONSTER_BOUGHT` envoyé par un client WebSocket.
@@ -58,7 +59,7 @@ export async function handleMonsterBoughtEventService(websocketCommunicationType
 
     const mobInstancePopulated = await getMobInstanceByIdPopulated(mobInstance._id.toString())
     console.log(`[GAME] Monster ${monsterName} bought by ${userEmail} id: ${mobInstancePopulated._id.toString()}`)
-
+    monsterBoughtUpdate()
     sendWebsocketJSONMessageToGODOT({
         event: WebsocketEventS2CEnum.MONSTER_SPAWN,
         data: {

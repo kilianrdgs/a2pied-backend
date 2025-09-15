@@ -30,4 +30,4 @@ export function isOpen(ws: WebSocket): boolean {
     return ws.readyState === ws.OPEN;
 }
 
-export const C2S_EVENT_TO_BROADCAST: WebsocketEventC2SEnum[] = [WebsocketEventC2SEnum.MONSTER_KILL, WebsocketEventC2SEnum.MONSTER_BOUGHT]
+export const C2S_EVENT_TO_BROADCAST: WebsocketEventC2SEnum[] = [WebsocketEventC2SEnum.MONSTER_KILL, WebsocketEventC2SEnum.MONSTER_BOUGHT, WebsocketEventC2SEnum.UPDATE_STATE]
