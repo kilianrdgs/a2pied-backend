@@ -32,20 +32,22 @@ export function webSocketSetup(server: any) {
             console.log("[WS CONNECT] GODOT_WS est set !")
         } else {
             ws._role = WS_CLIENT_ROLE;
+            let id: string = ''
             if (token) {
-                if (!websocketClients.get(token)) websocketClients.set(token, ws);
-                const id = randomUUID()
-                websocketClients.set(`${token}${id}`, ws)
+                if (websocketClients.get(token) === undefined) {
+                    id = token
+                } else {
+                    const UUID = randomUUID()
+                    id = `${token} - ${UUID}`
+                }
             } else {
-                const id = randomUUID()
-                websocketClients.set(`unknown-${id}`, ws)
+                const UUID = randomUUID()
+                id = `unknown-${UUID}`
             }
+            websocketClients.set(id, ws);
+            console.log(`[WS CONNECT] : ${id}`)
         }
 
-
-        const now = new Date().toISOString();
-        const ip = (ws as any)?._socket?.remoteAddress || '-';
-        console.log(`[WS CONNECT] ${now} ${ip}`);
         ws.on('message', (data) => handleMessageService(ws, data));
 
         ws.on('close', function close(code, reason) {
