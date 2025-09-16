@@ -1,6 +1,7 @@
 import type { Options } from "swagger-jsdoc";
 
 const NODE_ENV = process.env.NODE_ENV ?? "dev";
+
 const swaggerOptions: Options = {
 	definition: {
 		openapi: "3.0.0",
