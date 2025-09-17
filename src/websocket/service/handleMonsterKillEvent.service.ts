@@ -1,11 +1,11 @@
-import {websocketClients} from "../type/websocketState.js";
-import {sendWebsocketJSONMessage} from "../utils/sendWebsocketJSONMessage.js";
+import {sendWebsocketJSONMessageToMailWebsocket} from "../utils/sendWebsocketJSONMessage.js";
 import {WebsocketCommunicationC2SType} from "../type/WebsocketCommunicationC2SType.js";
 import {getMobInstanceByIdPopulated} from "../../mobInstances/service/getMobInstances.service.js";
 import {WebsocketEventS2CEnum} from "../type/WebsocketCommunicationS2CType.js";
-import {sendMailService} from "../../mails/service/sendMail.service.js";
+import {checkSendMailGauge} from "../../mails/service/sendMail.service.js";
 import {deleteMobInstanceService} from "../../mobInstances/service/deleteMobInstance.service.js";
-import {monsterKillUpdate} from "../../game/gameState.js";
+import {monsterKillGameStateUpdate} from "../../game/gameState.js";
+import {CheckSendMailPayloadType} from "../../mails/CheckSendMailPayload.type.js";
 
 /**
  * Gère l'événement `MONSTER_KILL` envoyé par un client WebSocket (le serveur de jeu).
@@ -40,22 +40,18 @@ export async function handleMonsterKillEventService(websocketCommunicationType: 
     const {mobInstanceId} = websocketCommunicationType.data
     if (typeof mobInstanceId === "string") {
         const mobInstance = await getMobInstanceByIdPopulated(mobInstanceId)
-
         const {user, mobType} = mobInstance
-        await sendMailService(user);
+        const checkSendMailPayload: CheckSendMailPayloadType = await checkSendMailGauge(user);
         await deleteMobInstanceService({id: mobInstanceId})
-        monsterKillUpdate()
-        const userTargetWebsocket = websocketClients.get(user.mail)
-        if (userTargetWebsocket) {
-            sendWebsocketJSONMessage(userTargetWebsocket, {event: WebsocketEventS2CEnum.MONSTER_KILL, data: {mobType}})
-        } else {
-            for (const [id, ws] of websocketClients) {
-                if (id.includes(user.mail)) {
-                    sendWebsocketJSONMessage(ws, {event: WebsocketEventS2CEnum.MONSTER_KILL, data: {mobType}})
-                }
+        monsterKillGameStateUpdate()
+        sendWebsocketJSONMessageToMailWebsocket(user.mail, {
+            event: WebsocketEventS2CEnum.MONSTER_KILL,
+            data: {
+                mobType,
+                mailTriggerGauge: checkSendMailPayload.user.mailTriggerGauge.toString(),
+                isGaugeFull: checkSendMailPayload.isGaugeFull
             }
-        }
-
+        })
         return {data: {monsterName: mobType.name, userPseudo: user.pseudo}}
     }
     throw new Error("Erreur dans handleMonsterKillEventService")

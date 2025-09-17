@@ -28,3 +28,13 @@ export const broadCastJSONMessage = async (broadcastMessage: WebsocketCommunicat
     }
     await Promise.all(promises);
 }
+
+
+export const sendWebsocketJSONMessageToMailWebsocket = (usermail: string, message: WebsocketCommunicationS2CType) => {
+    for (const [id, ws] of websocketClients) {
+        if (id.includes(usermail)) {
+            sendWebsocketJSONMessage(ws, message)
+        }
+    }
+
+}

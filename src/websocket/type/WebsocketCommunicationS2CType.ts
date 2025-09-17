@@ -11,7 +11,7 @@ export enum WebsocketEventS2CEnum {
 
 export type WebsocketCommunicationS2CType = {
     event: WebsocketEventS2CEnum,
-    data?: Record<string, string | Record<string, string> | string[]> | MonsterSpawnPayload | MonsterKillPayload
+    data?: Record<string, boolean | string | Record<string, string> | string[]> | MonsterSpawnPayload | MonsterKillPayload
 }
 
 

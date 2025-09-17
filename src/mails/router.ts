@@ -1,5 +1,6 @@
 import express from "express";
-import { sendMailController } from "./controller/sendMail.controller.js";
+import {sendMailController} from "./controller/sendMail.controller.js";
+import {getMailTriggerThresholdController} from "./controller/getMailTriggerThreshold.controller.js";
 
 const mailRouter = express.Router();
 
@@ -11,5 +12,6 @@ const mailRouter = express.Router();
  */
 
 mailRouter.post("/", sendMailController);
+mailRouter.get("/threshold", getMailTriggerThresholdController);
 
 export default mailRouter;
