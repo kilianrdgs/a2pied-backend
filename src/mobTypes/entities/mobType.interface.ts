@@ -3,4 +3,5 @@ export interface IMobType {
     cost: string;
     life: string;
     damage: number;
+    description: string;
 }

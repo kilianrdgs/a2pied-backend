@@ -8,6 +8,7 @@ const mobTypeSchema = new Schema<IMobType>({
     life: String,
     damage: Number,
     name: {type: String, unique: true},
+    description: String
 });
 
 export const MobTypeModel = mongoose.model('MobType', mobTypeSchema);

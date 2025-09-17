@@ -1,28 +1,32 @@
 {
   "mobTypesData": [
     {
+      "cost": 10,
+      "life": 10,
+      "damage": 2,
+      "name": "fish",
+      "description": "Cours en ligne droite sur le joueur"
+    },
+    {
+      "cost": 20,
+      "life": 5,
+      "damage": 1,
+      "name": "spider",
+      "description": "Tire sur le joueur pour le ralentir"
+    },
+    {
+      "cost": 30,
+      "life": 15,
+      "damage": 3,
+      "name": "snail",
+      "description": "Dépose une flaque d'acide lors de la mort"
+    },
+    {
       "cost": 40,
-      "life": 110,
-      "damage": 6,
-      "name": "fish"
-    },
-    {
-      "cost": 50,
-      "life": 120,
-      "damage": 9,
-      "name": "spider"
-    },
-    {
-      "cost": 60,
-      "life": 130,
-      "damage": 12,
-      "name": "snail"
-    },
-    {
-      "cost": 70,
-      "life": 140,
-      "damage": 15,
-      "name": "dog"
+      "life": 20,
+      "damage": 4,
+      "name": "dog",
+      "description": "Attaché au départ, puis se détache et très rapide"
     }
   ]
 }
