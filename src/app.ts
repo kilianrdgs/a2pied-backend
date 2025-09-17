@@ -3,12 +3,12 @@ import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import "dotenv/config";
 import cors from "cors";
-import {connectMongoose} from "./db/mongo.js";
+import { connectMongoose } from "./db/mongo.js";
 import swaggerOptions from "./docs/swagger.js";
 import globalRouter from "./router.js";
-import {createServer} from "node:http";
-import {webSocketSetup} from "./websocket/utils/webSocketSetup.js";
-import statusMonitor from 'express-status-monitor';
+import { createServer } from "node:http";
+import { webSocketSetup } from "./websocket/utils/webSocketSetup.js";
+import statusMonitor from "express-status-monitor";
 
 const app = express();
 const server = createServer(app);
@@ -20,28 +20,31 @@ const specs = swaggerJsdoc(swaggerOptions);
 app.use(express.json());
 
 app.use(
-    cors({
-        origin: ["*", FRONT_URL],
-        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-        allowedHeaders: ["Content-Type", "Authorization", "x-api-key"],
-    }),
+  cors({
+    origin: (origin, callback) => callback(null, true),
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "x-api-key"],
+  })
 );
 
 app.get("/", (req, res) => {
-    res.send("ok");
+  res.send("ok");
 });
 
 app.use("/doc", swaggerUi.serve, swaggerUi.setup(specs));
-app.use("/api",
-    //todo : Reactiver lorsque le wrapper de fetch est fait en front
-    /*apiKeyMiddleware,*/
-    globalRouter);
+app.use(
+  "/api",
+  //todo : Reactiver lorsque le wrapper de fetch est fait en front
+  /*apiKeyMiddleware,*/
+  globalRouter
+);
 webSocketSetup(server);
 
-app.use(statusMonitor({path: '/status'}));
+app.use(statusMonitor({ path: "/status" }));
 
-app.get('/status-ws', (_req, res) => {
-    res.type('html').send(`
+app.get("/status-ws", (_req, res) => {
+  res.type("html").send(`
     <html lang="fr"><body style="font-family:system-ui">
       <h2>WebSocket & Proc</h2>
       <div>WS GODOT: <span id="ws_godot">❌</span></div>
@@ -92,15 +95,15 @@ app.get('/status-ws', (_req, res) => {
 });
 
 connectMongoose()
-    .then(() => {
-        server.listen(PORT, () => {
-            console.log(`🚀 API running at http://localhost:${PORT}`);
-            console.log("--------------------------------");
-            console.log(`📖 Swagger UI at http://localhost:${PORT}/doc`);
-            console.log("--------------------------------");
-        });
-    })
-    .catch((e) => {
-        console.error("❌ Failed to start server:", e);
-        process.exit(1);
+  .then(() => {
+    server.listen(PORT, () => {
+      console.log(`🚀 API running at http://localhost:${PORT}`);
+      console.log("--------------------------------");
+      console.log(`📖 Swagger UI at http://localhost:${PORT}/doc`);
+      console.log("--------------------------------");
     });
+  })
+  .catch((e) => {
+    console.error("❌ Failed to start server:", e);
+    process.exit(1);
+  });
