@@ -1,6 +1,8 @@
 import type {Request, Response} from "express";
 import {godotWs, websocketClients} from "../type/websocketState.js";
 import {getGameState, resetGameState} from "../../game/gameState.js";
+import {deleteAllUpgradesService} from "../../upgrade/service/deleteAllUpgrades.service.js";
+import {creditsService} from "../../credits/service/credits.service.js";
 
 export async function getWebsocketStatusData(_req: Request, res: Response) {
     const ws_clients_mail: string[] = []
@@ -22,5 +24,7 @@ export async function getWebsocketStatusData(_req: Request, res: Response) {
 
 export async function resetGameStateController(_req: Request, res: Response) {
     resetGameState()
+    await deleteAllUpgradesService()
+    await creditsService.resetAllCredits()
     res.status(200).send("OK");
 }
