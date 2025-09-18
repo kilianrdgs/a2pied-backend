@@ -11,16 +11,10 @@
     "description": "Permet d'acheter 5 éléments d'un coup",
     "maxLevel": 1
   },
-  "BUY_10_IN_A_ROW": {
-    "baseCost": 500,
-    "costMultiplier": 2,
-    "description": "Permet d'acheter 10 éléments d'un coup",
-    "maxLevel": 1
-  },
   "CREDIT_MULTIPLIER": {
-    "baseCost": 250,
+    "baseCost": 300,
     "costMultiplier": 2.5,
     "description": "Multiplicateur de crédits",
-    "maxLevel": 5
+    "maxLevel": 2
   }
 }
