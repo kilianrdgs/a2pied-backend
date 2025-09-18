@@ -20,12 +20,12 @@ import type {Request, Response} from "express";
  *               name:
  *                 type: string
  *                 example: "AUTO_CREDIT"
- *               userId:
+ *               userEmail:
  *                 type: string
- *                 example: "64ff12345ab67c89d012ef34"
+ *                 example: "moi@edu.esiee-it.fr"
  *             required:
  *               - name
- *               - userId
+ *               - userEmail
  *     responses:
  *       201:
  *         description: Upgrade créé avec succès

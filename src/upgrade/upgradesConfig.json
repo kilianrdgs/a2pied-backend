@@ -1,0 +1,26 @@
+{
+  "AUTO_CREDIT": {
+    "baseCost": 100,
+    "costMultiplier": 1.5,
+    "description": "Génère des crédits automatiquement",
+    "maxLevel": 5
+  },
+  "BUY_5_IN_A_ROW": {
+    "baseCost": 200,
+    "costMultiplier": 2,
+    "description": "Permet d'acheter 5 éléments d'un coup",
+    "maxLevel": 1
+  },
+  "BUY_10_IN_A_ROW": {
+    "baseCost": 500,
+    "costMultiplier": 2,
+    "description": "Permet d'acheter 10 éléments d'un coup",
+    "maxLevel": 1
+  },
+  "CREDIT_MULTIPLIER": {
+    "baseCost": 250,
+    "costMultiplier": 2.5,
+    "description": "Multiplicateur de crédits",
+    "maxLevel": 5
+  }
+}
