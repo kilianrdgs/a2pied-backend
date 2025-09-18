@@ -30,7 +30,7 @@ export async function createMobInstanceServiceWithNameAndEmail(data: {
     userEmail: string
 }): Promise<HydratedDocument<IMobInstance>> {
     const mobType: HydratedDocument<IMobType> = await getMobTypeByNameService(data.monsterName)
-    const user: HydratedDocument<IUser> = await getUserByMailService(data.userEmail)
+    const user = await getUserByMailService(data.userEmail)
     const mobInstancesData: CreateMobInstanceDto = {mobType: mobType._id.toString(), user: user._id.toString()}
     return await MobInstanceModel.create({...mobInstancesData, createdAt: getDateFormatted(new Date())})
 
