@@ -22,9 +22,9 @@
       "description": "Dépose une flaque d'acide lors de la mort"
     },
     {
-      "cost": 40,
-      "life": 20,
-      "damage": 4,
+      "cost": 50,
+      "life": 30,
+      "damage": 3,
       "name": "dog",
       "description": "Attaché au départ, puis se détache et très rapide"
     }

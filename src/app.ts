@@ -3,48 +3,50 @@ import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import "dotenv/config";
 import cors from "cors";
-import { connectMongoose } from "./db/mongo.js";
+import {connectMongoose} from "./db/mongo.js";
 import swaggerOptions from "./docs/swagger.js";
 import globalRouter from "./router.js";
-import { createServer } from "node:http";
-import { webSocketSetup } from "./websocket/utils/webSocketSetup.js";
+import {createServer} from "node:http";
+import {webSocketSetup} from "./websocket/utils/webSocketSetup.js";
 import statusMonitor from "express-status-monitor";
 
 const app = express();
 const server = createServer(app);
 const PORT = process.env.PORT;
+/*
 const FRONT_URL = process.env.FRONT_URL ?? "";
+*/
 
 const specs = swaggerJsdoc(swaggerOptions);
 
 app.use(express.json());
 
 app.use(
-  cors({
-    origin: (origin, callback) => callback(null, true),
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "x-api-key"],
-  })
+    cors({
+        origin: (origin, callback) => callback(null, true),
+        credentials: true,
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization", "x-api-key"],
+    })
 );
 
 app.get("/", (req, res) => {
-  res.send("ok");
+    res.send("ok");
 });
 
 app.use("/doc", swaggerUi.serve, swaggerUi.setup(specs));
 app.use(
-  "/api",
-  //todo : Reactiver lorsque le wrapper de fetch est fait en front
-  /*apiKeyMiddleware,*/
-  globalRouter
+    "/api",
+    //todo : Reactiver lorsque le wrapper de fetch est fait en front
+    /*apiKeyMiddleware,*/
+    globalRouter
 );
 webSocketSetup(server);
 
-app.use(statusMonitor({ path: "/status" }));
+app.use(statusMonitor({path: "/status"}));
 
 app.get("/status-ws", (_req, res) => {
-  res.type("html").send(`
+    res.type("html").send(`
     <html lang="fr"><body style="font-family:system-ui">
       <h2>WebSocket & Proc</h2>
       <div>WS GODOT: <span id="ws_godot">❌</span></div>
@@ -57,6 +59,10 @@ app.get("/status-ws", (_req, res) => {
             <!-- Bouton pour resetGameState -->
       <button id="resetGameStateBtn">Réinitialiser l'état du jeu</button>
       <div id="resetResult"></div>
+      <input type="number" placeholder="10" id="creditToAddValue"/>
+            <button id="buttoncCreditToAddValue">Ajouter des crédit à tout les utilisateurs</button>
+            <div id="addCreditResult"></div>
+
       <script>
         async function tick(){
           const r = await fetch('/api/ws/status-data'); 
@@ -89,21 +95,39 @@ app.get("/status-ws", (_req, res) => {
             document.getElementById('resetResult').textContent = "Erreur réseau ou serveur.";
           }
         });
+        
+              document.getElementById('buttoncCreditToAddValue').addEventListener('click', async () => {
+          try {
+              const valueToAdd = document.getElementById('creditToAddValue').value
+              console.log(parseInt(valueToAdd))
+              const response = await fetch('/api/users/addCreditToUsers',{method:'POST',headers: {
+"Content-Type": "application/json",
+},body:JSON.stringify({amount:parseInt(valueToAdd)})})
+            if (response.ok) {
+              document.getElementById('addCreditResult').textContent = parseInt(valueToAdd) + "ajouté a tout les utilisateur";
+            } else {
+             const json = await response.json()
+              document.getElementById('resetResult').textContent = "Erreur lors de l'ajout." + json;
+            }
+          } catch (error) {
+            document.getElementById('resetResult').textContent = "Erreur réseau ou serveur.";
+          }
+        });
       </script>
     </body></html>
   `);
 });
 
 connectMongoose()
-  .then(() => {
-    server.listen(PORT, () => {
-      console.log(`🚀 API running at http://localhost:${PORT}`);
-      console.log("--------------------------------");
-      console.log(`📖 Swagger UI at http://localhost:${PORT}/doc`);
-      console.log("--------------------------------");
+    .then(() => {
+        server.listen(PORT, () => {
+            console.log(`🚀 API running at http://localhost:${PORT}`);
+            console.log("--------------------------------");
+            console.log(`📖 Swagger UI at http://localhost:${PORT}/doc`);
+            console.log("--------------------------------");
+        });
+    })
+    .catch((e) => {
+        console.error("❌ Failed to start server:", e);
+        process.exit(1);
     });
-  })
-  .catch((e) => {
-    console.error("❌ Failed to start server:", e);
-    process.exit(1);
-  });
